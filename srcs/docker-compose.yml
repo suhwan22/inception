@@ -9,7 +9,7 @@ services:
       - 80:80
     restart: always
     volumes:
-      - ./requirements/volume:/var/www/html
+      - wp-volume:/var/www/html
     depends_on:
       - wordpress
     networks:
@@ -20,7 +20,7 @@ services:
     container_name: wordpress
     restart: always
     volumes:
-      - ./requirements/volume:/var/www/html
+      - wp-volume:/var/www/html
     expose:
       - "9000"
     networks:
@@ -31,5 +31,9 @@ networks:
     driver: bridge
 
 volumes:
-  nginx:
-  wordpress:
+  wp-volume:
+    driver: local
+    driver_opts:
+      type: volume
+      device: /Users/kimsuhwan/test_docker/inception/srcs/wp-volume
+      o: bind
