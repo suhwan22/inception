@@ -11,6 +11,7 @@ RUN apk update && apk upgrade && \
 			php${PHP_VERSION}-iconv \
 			php${PHP_VERSION}-json \
 			php${PHP_VERSION}-gd \
+			php${PHP_VERSION}-phar \
 			php${PHP_VERSION}-curl \
 			php${PHP_VERSION}-xml \
 			php${PHP_VERSION}-mysqli \
@@ -31,9 +32,12 @@ RUN apk update && apk upgrade && \
 	sed -i "s|listen = 127.0.0.1:9000|listen = 0.0.0.0:9000|g" /etc/php${PHP_VERSION}/php-fpm.d/www.conf && \
 	mkdir -p /var/www/html
 
-COPY ./requirements/wordpress/test.php /var/www/html/test.php
+WORKDIR /var/www/html
 
-# 컨테이너에서 443 포트 열기
+#COPY ./requirements/wordpress/tool/test.php /var/www/html/test.php
+#COPY ./tools/test.php /var/www/html/test.php
+
+# 컨테이너에서 9000 포트 열기
 EXPOSE 9000
 
 # 컨테이너 실행 시 php-fpm foreground로 시작

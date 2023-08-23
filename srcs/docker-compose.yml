@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3"
 
 services:
   nginx:
@@ -8,6 +8,8 @@ services:
       - 443:443
       - 80:80
     restart: always
+    volumes:
+      - ./requirements/volume:/var/www/html
     depends_on:
       - wordpress
     networks:
@@ -17,6 +19,8 @@ services:
     build: requirements/wordpress
     container_name: wordpress
     restart: always
+    volumes:
+      - ./requirements/volume:/var/www/html
     expose:
       - "9000"
     networks:
@@ -25,3 +29,7 @@ services:
 networks:
   suhkim_network:
     driver: bridge
+
+volumes:
+  nginx:
+  wordpress:

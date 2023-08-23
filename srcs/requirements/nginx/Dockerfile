@@ -11,12 +11,16 @@ RUN apk update && apk upgrade && \
     -subj "/C=KR/ST=Seoul/O=42Seoul/OU=suhkim/CN=inception/" && \
 	chown -R nginx /etc/nginx/ssl/suhkim.42.fr.crt && \
     chown -R nginx /etc/nginx/ssl/suhkim.42.fr.key && \
-	mkdir -p /var/www/html && \
-	touch /var/www/html/test.php
+	mkdir -p /var/www/html
+#	touch /var/www/html/test.php
 
-COPY ./requirements/nginx/conf/default.conf /etc/nginx/http.d/default.conf
-COPY ./requirements/nginx/nginx_test_html/index1.html /var/www/html/index.html
-COPY ./requirements/nginx/nginx_test_html/index2.html /var/www/html/test/index.html
+#COPY ./requirements/nginx/conf/default.conf /etc/nginx/http.d/default.conf
+#COPY ./requirements/nginx/nginx_test_html/index1.html /var/www/html/index.html
+#COPY ./requirements/nginx/nginx_test_html/index2.html /var/www/html/test/index.html
+
+COPY ./conf/default.conf /etc/nginx/http.d/default.conf
+COPY ./nginx_test_html/index1.html /var/www/html/index.html
+COPY ./nginx_test_html/index2.html /var/www/html/test/index.html
 
 # 컨테이너에서 443 포트 열기
 EXPOSE 80

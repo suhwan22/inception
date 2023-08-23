@@ -1,3 +1,9 @@
+up:
+	docker-compose -f ./srcs/docker-compose.yml up -d
+
+down:
+	docker-compose -f ./srcs/docker-compose.yml down
+
 nginx:
 	docker run -it -d --net=test_network --name test_nginx -p 80:80 -p 443:443 test_nginx
 
@@ -8,8 +14,8 @@ image_clean:
 	docker rmi test_nginx
 
 fclean:
-	docker rm -f test_nginx
-	make image_clean
+	docker-compose -f ./srcs/docker-compose.yml down --rmi all --volumes
+	docker system prune -a
 
 re:
 	make fclean
