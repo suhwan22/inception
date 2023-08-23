@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  nginx:
+    build: requirements/nginx
+    container_name: nginx
+    ports:
+      - 443:443
+      - 80:80
+    restart: always
+    depends_on:
+      - wordpress
+    networks:
+      - suhkim_network
+
+  wordpress:
+    build: requirements/wordpress
+    container_name: wordpress
+    restart: always
+    expose:
+      - "9000"
+    networks:
+      - suhkim_network
+
+networks:
+  suhkim_network:
+    driver: bridge
