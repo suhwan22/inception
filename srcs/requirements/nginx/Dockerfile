@@ -16,7 +16,6 @@ RUN apk update && apk upgrade && \
 COPY ./conf/default.conf /etc/nginx/http.d/default.conf
 
 # 컨테이너에서 443 포트 열기
-EXPOSE 80
 EXPOSE 443
 
 # 컨테이너 실행 시 nginx 시작

@@ -30,15 +30,20 @@ RUN apk update && apk upgrade && \
 			curl \
 			iputils && \
 	sed -i "s|listen = 127.0.0.1:9000|listen = 0.0.0.0:9000|g" /etc/php${PHP_VERSION}/php-fpm.d/www.conf && \
+	sed -i "s|;listen.owner = nobody|listen.owner = nobody|g" /etc/php${PHP_VERSION}/php-fpm.d/www.conf && \
+    sed -i "s|;listen.group = nobody|listen.group = nobody|g" /etc/php${PHP_VERSION}/php-fpm.d/www.conf && \
+    sed -i "s|;clear_env = no|clear_env = no|g" /etc/php${PHP_VERSION}/php-fpm.d/www.conf && \
 	mkdir -p /var/www/html
-
-WORKDIR /var/www/html
-
-#COPY ./requirements/wordpress/tool/test.php /var/www/html/test.php
-#COPY ./tools/test.php /var/www/html/test.php
 
 # 컨테이너에서 9000 포트 열기
 EXPOSE 9000
 
-# 컨테이너 실행 시 php-fpm foreground로 시작
-CMD ["/usr/sbin/php-fpm81", "-F"]
+WORKDIR /var/www/html
+
+COPY ./conf/wp-config-create.sh .
+COPY ./tools/script.sh .
+
+RUN sh wp-config-create.sh && \
+	rm wp-config-create.sh
+
+CMD ["/bin/sh", "/var/www/html/script.sh"]

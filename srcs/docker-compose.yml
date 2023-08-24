@@ -1,22 +1,32 @@
 version: "3"
 
 services:
-  nginx:
-    build: requirements/nginx
-    container_name: nginx
-    ports:
-      - 443:443
-      - 80:80
+  mariadb:
+    build: requirements/mariadb
+      args:
+        DB_NAME: ${DB_NAME}
+        DB_USER: ${DB_USER}
+        DB_PASS: ${DB_PASS}
+        DB_ROOT: ${DB_ROOT}
+    container_name: mariadb
     restart: always
     volumes:
-      - wp-volume:/var/www/html
-    depends_on:
-      - wordpress
+      - db-volume:/var/lib/mysql
+    expose:
+      - "3306"
     networks:
       - suhkim_network
 
   wordpress:
+    depends_on:
+      - mariadb
     build: requirements/wordpress
+      args:
+        DB_NAME: ${DB_NAME}
+        DB_USER: ${DB_USER}
+        DB_PASS: ${DB_PASS}
+    env_file:
+      - .env
     container_name: wordpress
     restart: always
     volumes:
@@ -26,6 +36,20 @@ services:
     networks:
       - suhkim_network
 
+  nginx:
+    depends_on:
+      - wordpress
+    build: requirements/nginx
+    container_name: nginx
+    ports:
+      - 443:443
+    restart: always
+    volumes:
+      - wp-volume:/var/www/html
+    networks:
+      - suhkim_network
+
+
 networks:
   suhkim_network:
     driver: bridge
@@ -34,6 +58,13 @@ volumes:
   wp-volume:
     driver: local
     driver_opts:
-      type: volume
-      device: /Users/kimsuhwan/test_docker/inception/srcs/wp-volume
       o: bind
+      type: none
+      device: /Users/kimsuhwan/prac_inception/inception/srcs/wp-volume
+
+  db-volume:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /Users/kimsuhwan/prac_inception/inception/srcs/db-volume
