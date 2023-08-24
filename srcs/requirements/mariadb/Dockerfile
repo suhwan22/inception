@@ -1,9 +1,9 @@
 FROM alpine:3.17.4
 
-ARG DB_NAME=wordpress \
-    DB_USER=wpuser \
-    DB_PASS=wppass \
-    DB_ROOT=rootpass
+ARG DB_NAME \
+    DB_USER \
+    DB_PASS \
+    DB_ROOT
 
 RUN apk update && apk upgrade && apk add --no-cache mariadb mariadb-client && \
     mkdir /var/run/mysqld && \

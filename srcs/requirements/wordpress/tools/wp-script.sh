@@ -12,11 +12,13 @@ wp core install \
    --admin_email=${WORDPRESS_ADMIN_EMAIL} \
    --skip-email
 
+cd /var/www/html
+
 wp user create ${WORDPRESS_USER} \
                ${WORDPRESS_USER_EMAIL} \
                --user_pass=${WORDPRESS_USER_PASSWORD} \
-               --role=author
+               --role=author --allow-root
 
 chmod -R 0777 /var/www/html/wp-content/
 
-/usr/sbin/php-fpm8 -F
+/usr/sbin/php-fpm81 -F

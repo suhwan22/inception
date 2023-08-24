@@ -1,6 +1,9 @@
 FROM alpine:3.17.4
 
-ARG PHP_VERSION=81
+ARG PHP_VERSION \
+	DB_NAME \
+    DB_USER \
+    DB_PASS
 
 RUN apk update && apk upgrade && \
 	apk add --no-cache \
@@ -35,15 +38,20 @@ RUN apk update && apk upgrade && \
     sed -i "s|;clear_env = no|clear_env = no|g" /etc/php${PHP_VERSION}/php-fpm.d/www.conf && \
 	mkdir -p /var/www/html
 
+RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
+	chmod +x wp-cli.phar && \
+	mv wp-cli.phar /usr/local/bin/wp && \
+	wp core download --locale=ko_KR --allow-root --path=/var/www/html
+
 # 컨테이너에서 9000 포트 열기
 EXPOSE 9000
 
 WORKDIR /var/www/html
 
-COPY ./conf/wp-config-create.sh .
-COPY ./tools/script.sh .
+COPY ./requirements/wordpress/conf/create-wp-conf.sh .
+COPY ./requirements/wordpress/tools/wp-script.sh .
 
-RUN sh wp-config-create.sh && \
-	rm wp-config-create.sh
+RUN /bin/sh create-wp-conf.sh && \
+	rm create-wp-conf.sh
 
-CMD ["/bin/sh", "/var/www/html/script.sh"]
+CMD ["/bin/sh", "/var/www/html/wp-script.sh"]

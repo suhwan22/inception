@@ -3,11 +3,11 @@ version: "3"
 services:
   mariadb:
     build: requirements/mariadb
-      args:
-        DB_NAME: ${DB_NAME}
-        DB_USER: ${DB_USER}
-        DB_PASS: ${DB_PASS}
-        DB_ROOT: ${DB_ROOT}
+    environment:
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_ROOT: ${DB_ROOT}
     container_name: mariadb
     restart: always
     volumes:
@@ -20,8 +20,10 @@ services:
   wordpress:
     depends_on:
       - mariadb
-    build: requirements/wordpress
+    build:
+      dockerfile: requirements/wordpress//Dockerfile
       args:
+        PHP_VERSION: ${PHP_VERSION}
         DB_NAME: ${DB_NAME}
         DB_USER: ${DB_USER}
         DB_PASS: ${DB_PASS}
