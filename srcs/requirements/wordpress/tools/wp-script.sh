@@ -1,6 +1,7 @@
 #!bin/sh
 
-wp core download --allow-root --path=/var/www/html
+if [ ! -f "/var/www/html/index.php" ]; then
+	wp core download --locale=ko_KR --allow-root --path=/var/www/html
 
 wp core install \
    --allow-root \
@@ -12,12 +13,15 @@ wp core install \
    --admin_email=${WORDPRESS_ADMIN_EMAIL} \
    --skip-email
 
+
 cd /var/www/html
 
 wp user create ${WORDPRESS_USER} \
                ${WORDPRESS_USER_EMAIL} \
                --user_pass=${WORDPRESS_USER_PASSWORD} \
                --role=author --allow-root
+
+fi
 
 chmod -R 0777 /var/www/html/wp-content/
 

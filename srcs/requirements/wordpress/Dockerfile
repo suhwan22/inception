@@ -1,4 +1,4 @@
-FROM alpine:3.17.4
+FROM alpine:3.17
 
 ARG PHP_VERSION \
 	DB_NAME \
@@ -6,7 +6,7 @@ ARG PHP_VERSION \
     DB_PASS
 
 RUN apk update && apk upgrade && \
-	apk add --no-cache \
+	apk add --no-cache tini \
 			php${PHP_VERSION} \
 			php${PHP_VERSION}-fpm \
 			php${PHP_VERSION}-common \
@@ -21,6 +21,7 @@ RUN apk update && apk upgrade && \
 			php${PHP_VERSION}-imap \
 			php${PHP_VERSION}-pdo \
 			php${PHP_VERSION}-pdo_mysql \
+			php${PHP_VERSION}-mbstring \
 			php${PHP_VERSION}-soap \
 			php${PHP_VERSION}-posix \
 			php${PHP_VERSION}-gettext \
@@ -40,18 +41,19 @@ RUN apk update && apk upgrade && \
 
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
 	chmod +x wp-cli.phar && \
-	mv wp-cli.phar /usr/local/bin/wp && \
-	wp core download --locale=ko_KR --allow-root --path=/var/www/html
+	mv wp-cli.phar /usr/local/bin/wp
 
 # 컨테이너에서 9000 포트 열기
 EXPOSE 9000
 
 WORKDIR /var/www/html
 
-COPY ./requirements/wordpress/conf/create-wp-conf.sh .
-COPY ./requirements/wordpress/tools/wp-script.sh .
+COPY ./requirements/wordpress/conf/create-wp-conf.sh /var/www/html/create-wp-conf.sh
+COPY ./requirements/wordpress/tools/wp-script.sh /var/www/html/wp-script.sh
 
 RUN /bin/sh create-wp-conf.sh && \
-	rm create-wp-conf.sh
+	rm create-wp-conf.sh && \
+	chmod -R 777 /var/www/html/wp-script.sh
 
+#CMD ["/sbin/tini", "--", "/var/www/html/wp-script.sh"]
 CMD ["/bin/sh", "/var/www/html/wp-script.sh"]

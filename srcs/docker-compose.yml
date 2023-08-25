@@ -51,7 +51,6 @@ services:
     networks:
       - suhkim_network
 
-
 networks:
   suhkim_network:
     driver: bridge
