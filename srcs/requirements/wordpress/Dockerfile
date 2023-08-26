@@ -6,7 +6,7 @@ ARG PHP_VERSION \
     DB_PASS
 
 RUN apk update && apk upgrade && \
-	apk add --no-cache tini \
+	apk add --no-cache \
 			php${PHP_VERSION} \
 			php${PHP_VERSION}-fpm \
 			php${PHP_VERSION}-common \
