@@ -2,6 +2,8 @@ version: "3"
 
 services:
   mariadb:
+    image: mariadb
+    pull_policy: never
     build: requirements/mariadb
     environment:
       DB_NAME: ${DB_NAME}
@@ -20,6 +22,8 @@ services:
   wordpress:
     depends_on:
       - mariadb
+    image: wordpress
+    pull_policy: never
     build:
       context: .
       dockerfile: requirements/wordpress/Dockerfile
@@ -42,6 +46,8 @@ services:
   nginx:
     depends_on:
       - wordpress
+    image: nginx
+    pull_policy: never
     build: requirements/nginx
     container_name: nginx
     ports:
