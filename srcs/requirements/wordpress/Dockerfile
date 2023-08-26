@@ -39,6 +39,7 @@ RUN apk update && apk upgrade && \
     sed -i "s|;clear_env = no|clear_env = no|g" /etc/php${PHP_VERSION}/php-fpm.d/www.conf && \
 	mkdir -p /var/www/html
 
+#wp-cli 설치
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
 	chmod +x wp-cli.phar && \
 	mv wp-cli.phar /usr/local/bin/wp
@@ -55,5 +56,4 @@ RUN /bin/sh create-wp-conf.sh && \
 	rm create-wp-conf.sh && \
 	chmod -R 777 /var/www/html/wp-script.sh
 
-#CMD ["/sbin/tini", "--", "/var/www/html/wp-script.sh"]
-CMD ["/bin/sh", "/var/www/html/wp-script.sh"]
+ENTRYPOINT ["/bin/sh", "/var/www/html/wp-script.sh"]
