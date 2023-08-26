@@ -48,8 +48,8 @@ EXPOSE 9000
 
 WORKDIR /var/www/html
 
-COPY ./requirements/wordpress/conf/create-wp-conf.sh /var/www/html/create-wp-conf.sh
-COPY ./requirements/wordpress/tools/wp-script.sh /var/www/html/wp-script.sh
+COPY requirements/wordpress/conf/create-wp-conf.sh /var/www/html/create-wp-conf.sh
+COPY requirements/wordpress/tools/wp-script.sh /var/www/html/wp-script.sh
 
 RUN /bin/sh create-wp-conf.sh && \
 	rm create-wp-conf.sh && \
